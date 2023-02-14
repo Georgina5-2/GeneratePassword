@@ -9,8 +9,6 @@
 
     passwdlength=Number(window.prompt("What is the maximum length of your password between the span of 8-128 characters?"));
     var isValidInput = Number.isInteger(passwdlength) && (passwdlength > 7 && passwdlength < 129)
-    console.log('isValidInput : ', isValidInput);
-    console.log('Not isValidInput : ', !isValidInput);
     if (!isValidInput) {
         alert("Please enter only numbers between 8-128!");
       }
@@ -22,23 +20,26 @@
   do {
 
         confirmLowerCase = window.confirm("do you need a lowercase letter"); 
+        console.log('lowercase : ', confirmLowerCase);
         confirmUpperCase = window.confirm("do you need a uppercase letter");
+        console.log('uppercase : ', confirmUpperCase);
+
         confirmSpecialCharacter = window.confirm("do you need a special character");
+        console.log('specialchar : ', confirmSpecialCharacter);
+
         confirmNumericCharacter = window.confirm("do you need a number");
+        console.log('number : ', confirmNumericCharacter);
+
         var isAtleastOneCriteriaSelected=(confirmLowerCase || confirmUpperCase || confirmSpecialCharacter || confirmNumericCharacter);
-
-
         if (!isAtleastOneCriteriaSelected)
         {
+          console.log('----Select atleast 1 criteria----');
           alert("You must select 'ok' for atleast one of the prompts");
         }
     }while(!isAtleastOneCriteriaSelected);
 
   alert('collected password criteria sucessfully');
-  // console.log('lowercase : ', confirmLowerCase);
-  // console.log('uppercase : ', confirmUpperCase);
-  // console.log('specialchar : ', confirmSpecialCharacter);
-  // console.log('number : ', confirmNumericCharacter);
+
 
   var generatedPassword = getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialCharacter, confirmNumericCharacter, passwdlength);
 
@@ -47,10 +48,13 @@
 
 function getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialCharacter, confirmNumericCharacter, passwordLength) {
   
-  // var lowerCaseRegExp='^(?=.*[a-z])$';
-  // var upperCaseRegExp='^(?=.*[A-Z])$';
-  // var specialCharRegExp='^(?=.*[!@#$%^&*(),.?":{}|<>])$';
-  // var numericRegExp='^[0-9]$';
+  var regExStart='^';
+  var regExEnd='$';
+  var lowerCaseRegEx='(?=.*[a-z])';
+  var upperCaseRegEx='(?=.*[A-Z])';
+  var specialCharRegEx='(?=.*[!@#$%])';
+  var numericRegEx='(?=.*[0-9])';
+  var lengthRegEx='.{'+passwordLength+'}'
 
   const alphaLowerCase = "abcdefghijklmnopqrstuvwxyz";
   const alphaUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -58,50 +62,57 @@ function getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialChar
   const numbers = "0123456789";
 
 
-  var regexBuilder, userSelectedCharacters;
+  let regexString=regExStart, userSelectedCharacters='';
   if(confirmLowerCase) 
   {
-    // regexBuilder = regexBuilder + lowerCaseRegExp;
+    regexString = regexString + lowerCaseRegEx;
     userSelectedCharacters = userSelectedCharacters + alphaLowerCase
   } 
-  console.log('After lowercase condition regexBuilder value : ', regexBuilder)
+  console.log('After lowercase condition regexString value : ', regexString)
   console.log('After lowercase condition userSelectedCharacters value : ', userSelectedCharacters)
 
   if(confirmUpperCase) 
   {
-      // regexBuilder= regexBuilder+upperCaseRegExp;
+      regexString= regexString+upperCaseRegEx;
       userSelectedCharacters = userSelectedCharacters + alphaUpperCase
   }
-  console.log('After uppercase condition regexBuilder value : ', regexBuilder)
+  console.log('After uppercase condition regexString value : ', regexString)
   console.log('After uppercase condition userSelectedCharacters value : ', userSelectedCharacters)
 
   if(confirmSpecialCharacter)
   {
-    // regexBuilder= regexBuilder+specialCharRegExp;
+    regexString= regexString+specialCharRegEx;
     userSelectedCharacters = userSelectedCharacters + specialCharacters
 
   }
-  console.log('After splchar condition regexBuilder value : ', regexBuilder)
+  console.log('After splchar condition regexString value : ', regexString)
   console.log('After splchar condition userSelectedCharacters value : ', userSelectedCharacters)
 
   if(confirmNumericCharacter)
   {
-    // regexBuilder= regexBuilder+numericRegExp;
+    regexString= regexString+numericRegEx;
     userSelectedCharacters = userSelectedCharacters + numbers
-
   }
-  console.log('After numeric condition regexBuilder value : ', regexBuilder);
+  regexString=regexString+lengthRegEx+regExEnd
+  console.log('After numeric condition regexString value : ', regexString);
   console.log('After numeric condition userSelectedCharacters value : ', userSelectedCharacters);
 
-  let generatedPassword;
-  generatedPassword = passwdGenerate(passwordLength, userSelectedCharacters);
+  let generatedPassword, isPasswordMatchPattern=false;
+  // generatedPassword = passwdGenerate(passwordLength, userSelectedCharacters);
+  // console.log('generatedPassword value : ', generatedPassword)
+  // return generatedPassword;
+  var passwordPattern = new RegExp(regexString);
+  console.log('passwordPattern value : ', passwordPattern)
+
+  do {
+    generatedPassword = passwdGenerate(passwordLength, userSelectedCharacters);
+    console.log('generatedPassword value inside do while : ', generatedPassword)
+    isPasswordMatchPattern = passwordPattern.test(generatedPassword)
+    console.log('isPasswordMatchPattern do while : ', isPasswordMatchPattern)
+  } while(!isPasswordMatchPattern)
+
   console.log('generatedPassword value : ', generatedPassword)
-
   return generatedPassword;
-
-  // do {
-  //   generatedPassword = passwdGenerate(passwordLength, userSelectedCharacters);
-  // } while(generatedPassword.match(regexBuilder))
 
 }
 
@@ -129,4 +140,4 @@ function writePassword() {
 }
 
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword());
+generateBtn.addEventListener("click", writePassword);
