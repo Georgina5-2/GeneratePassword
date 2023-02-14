@@ -4,19 +4,23 @@
 // //Lowercase letters
  function generatePassword() {
 
-  var passwdlength;
+  var passwdlength; 
+
+  //password length and selection criteria is set
   do {
 
-    passwdlength=Number(window.prompt("What is the maximum length of your password between the span of 8-128 characters?"));
-    var isValidInput = Number.isInteger(passwdlength) && (passwdlength > 7 && passwdlength < 129)
-    if (!isValidInput) {
-        alert("Please enter only numbers between 8-128!");
-      }
-  }while (!isValidInput);
+        passwdlength=Number(window.prompt("What is the maximum length of your password between the span of 8-128 characters?"));
+        var isValidInput = Number.isInteger(passwdlength) && (passwdlength > 7 && passwdlength < 129)
+        if (!isValidInput) {
+            alert("Please enter only numbers between 8-128!");
+        }
+      }while (!isValidInput);
   var confirmLowerCase;
   var confirmUpperCase;
   var confirmSpecialCharacter;
   var confirmNumericCharacter;
+
+  //type of characters input from the user
   do {
 
         confirmLowerCase = window.confirm("do you need a lowercase letter"); 
@@ -46,6 +50,7 @@
   return generatedPassword;
 }
 
+//password validated against the generated regular expression
 function getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialCharacter, confirmNumericCharacter, passwordLength) {
   
   var regExStart='^';
@@ -98,9 +103,6 @@ function getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialChar
   console.log('After numeric condition userSelectedCharacters value : ', userSelectedCharacters);
 
   let generatedPassword, isPasswordMatchPattern=false;
-  // generatedPassword = passwdGenerate(passwordLength, userSelectedCharacters);
-  // console.log('generatedPassword value : ', generatedPassword)
-  // return generatedPassword;
   var passwordPattern = new RegExp(regexString);
   console.log('passwordPattern value : ', passwordPattern)
 
@@ -116,6 +118,7 @@ function getValidPassword(confirmLowerCase, confirmUpperCase, confirmSpecialChar
 
 }
 
+//password generation
 function passwdGenerate(passwdlength, characters)
 {
   let result='';
@@ -134,7 +137,6 @@ function passwdGenerate(passwdlength, characters)
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
 
 }
